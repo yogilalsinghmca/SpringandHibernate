@@ -8,11 +8,13 @@ public class Employee {
 	private int salary;
 	private Set<Certificate> certificates;
 	private int departmentId;
+	Address address;
 	
 	public Employee() {}
-	public Employee(String fname, int salary) {
+	public Employee(String fname, int salary,Address address) {
 		this.name = fname;	     
 		this.salary = salary;
+		this.address = address;
 	}
 	public int getId() {
 		return id;
@@ -44,6 +46,12 @@ public class Employee {
 	}
 	public void setDepartmentId(int departmentId) {
 		this.departmentId = departmentId;
+	}
+	public Address getAddress() {
+		return address;
+	}
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 }

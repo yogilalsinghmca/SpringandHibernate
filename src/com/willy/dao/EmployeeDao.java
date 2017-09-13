@@ -7,11 +7,19 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.willy.entities.Address;
 import com.willy.entities.Certificate;
 import com.willy.entities.Employee;
 
+@EnableTransactionManagement
+@Repository
 public class EmployeeDao {
 	
 	HibernateTemplate template;
@@ -24,10 +32,10 @@ public class EmployeeDao {
 		template.save(e);  
 	}
 	/* Method to add an employee record in the database */
-	public Integer addEmployee(String name, int salary, Set<Certificate> cert){
+	public Integer addEmployee(String name, int salary, Set<Certificate> cert,Address address){
 		Integer employeeID = null;
-		try{      
-			Employee employee = new Employee(name, salary);
+		try{
+			Employee employee = new Employee(name, salary,address);
 			employee.setCertificates(cert);
 			employeeID = (Integer) template.save(employee);     
 		}catch (HibernateException e) {      
@@ -58,5 +66,36 @@ public class EmployeeDao {
 		List<Employee> list=new ArrayList<Employee>();  
 		list=template.loadAll(Employee.class);  
 		return list;  
-	}  
+	}
+	public HibernateTemplate getTemplate() {
+		return template;
+	}
+	
+	@Transactional
+	public List<Employee> getFilteredData(){
+		Session session = template.getSessionFactory().getCurrentSession();
+		@SuppressWarnings({ "unchecked", "deprecation" })
+		List<Employee> employees = session.createCriteria(Employee.class)
+				.add(Restrictions.like("name", "yogi") )
+				.add(Restrictions.eq("salary", 2000)) 
+				.addOrder(Order.asc("name") ) .list();
+		return employees;
+		
+	}
+	/* Method to add an address record in the database */
+	public Address addAddress(String street, String city, String state, String zipcode) {
+		Integer addressID = null;
+		Address address = null;
+		try{
+			address = new Address(street, city, state, zipcode);
+			addressID = (Integer) template.save(address); 
+
+		}catch (HibernateException e) {
+
+			e.printStackTrace(); 
+		}finally {
+
+		}
+		return address;
+	}
 }  

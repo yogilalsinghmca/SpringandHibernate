@@ -4,7 +4,7 @@
  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
 
 <hibernate-mapping>
-   <class name="com.willy.entities.Employee" table="Employee">
+   <class name="com.willy.entities.Employee" table="EMPLOYEE">
       <meta attribute="class-description">
          This class contains the employee detail. 
       </meta>
@@ -15,9 +15,11 @@
          <key column="empId"/>
          <one-to-many class="com.willy.entities.Certificate"/>
       </set>
+      
       <property name="name" column="name" type="string"/>
       <property name="departmentId" column="departmentId" type="int"/>
       <property name="salary" column="salary" type="int"/>
+      <many-to-one name="Address" column ="AddressId" class="Address"></many-to-one>
    </class>
 
    <class name="com.willy.entities.Certificate" table="Certificate">
@@ -28,5 +30,17 @@
          <generator class="native"/>
       </id>
       <property name="name" column="name" type="string"/>
+   </class>
+   <class name="Address" table="ADDRESS">
+      <meta attribute="class-description">
+         This class contains the address detail. 
+      </meta>
+      <id name="id" type="int" column="id">
+         <generator class="native"/>
+      </id>
+      <property name="street" column="street_name" type="string"/>
+      <property name="city" column="city_name" type="string"/>
+      <property name="state" column="state_name" type="string"/>
+      <property name="zipcode" column="zipcode" type="string"/>
    </class>
 </hibernate-mapping>
